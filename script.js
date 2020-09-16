@@ -16,6 +16,7 @@ const Students = {
   image: "",
   house: "",
 };
+
 function start() {
   console.log("Program running");
   loadJSON();
@@ -30,7 +31,6 @@ async function loadJSON() {
 }
 
 function prepareObjects(jsonData) {
-  console.log(jsonData);
   students = jsonData.map(prepareObject);
   console.log("Return value", students);
 
@@ -39,13 +39,12 @@ function prepareObjects(jsonData) {
 }
 
 function prepareObject(jsonObject) {
-  console.log("PrepareObject", jsonObject);
   const student = Object.create(Students);
 
   //firstName
   //Split the fullname-string from the json-file by every space.
   const nameParts = jsonObject.fullname.trim().split(" ");
-  console.log("NameParts", nameParts.length);
+
   //Set student firstName to be the first index of the nameParts-array
   student.firstName = nameParts[0].capitalize();
 
@@ -55,10 +54,38 @@ function prepareObject(jsonObject) {
   // }
   if (nameParts.length > 2) {
     console.log("More than 2", nameParts);
-    const middleNames = [...nameParts].splice(1).shift();
-    console.log(":::MIDDLE NAMES", middleNames);
+    //const middleNames = [...nameParts].splice(1).shift();
 
-    student.middleName = middleNames.capitalize();
+    /// MIDDLENAMES TEST TEST START --- DELETE AFTERWARDS
+    const test = [
+      "jonas",
+      "bøGh",
+      "PedeSFDFKLMsen",
+      "asdaSSDasdfndsen",
+      "asdmnbvnsen",
+      "Madsen",
+      "asASDastOne",
+      "lAAAAsastRemove",
+    ];
+
+    // //const middleNamesTest = [...test].slice(1, test.lenght - 2);
+    // const middleNamesTest = [...test].slice(1, test.length - 1);
+    // console.log("MiddleNAmesTESTTESTETST", middleNamesTest);
+
+    /// MIDDLENAMES TEST TEST FINISH --- DELETE AFTERWARDS
+
+    ///// --- TEST: Make a middleNames array using the slice() method,
+    ///and capitalize each item using map() and String.prototype.capitalize
+    const middleNames = [...nameParts].slice(1, nameParts.length - 1);
+    console.log(":::MIDDLE NAMES -- SLICE:::", middleNames);
+
+    const capitalizeMiddleNames = middleNames.map((i) => i.capitalize());
+    console.log(capitalizeMiddleNames);
+
+    const testCap = test.map((i) => i.capitalize());
+    console.log(testCap);
+
+    student.middleName = capitalizeMiddleNames.join(" ");
   }
 
   //lastName
@@ -162,10 +189,10 @@ String.prototype.capitalize = function () {
   return this[0].toUpperCase() + this.substring(1).toLowerCase();
 };
 
-//// EKSPERIMENT!!
-// String.prototype.middleNamesCap = function () {
-//   return this.map((i) => i.capitalize());
-// };
+// EKSPERIMENT!!
+String.prototype.middleNamesCap = function () {
+  return this.map((i) => i.capitalize());
+};
 
 // const names = ["frede", "svendsen", "jørgensen", "pedersen"];
 // console.log(names.map((i) => i.capitalize()));
