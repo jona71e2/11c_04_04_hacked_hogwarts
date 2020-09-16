@@ -133,52 +133,38 @@ function filterList(filter) {
   displayList(filteredList);
 }
 
-function selectSort() {
-  const sort = this.dataset.sort;
-  console.log(sort);
-  sortList(sort);
+function selectSort(event) {
+  const sortProp = this.dataset.sort;
+  const sortDir = this.dataset.sortDirection;
+  console.log(sortDir, "FIRST FIRST FIRST:::");
+
+  if (sortDir == "asc") {
+    console.log("selv");
+    event.target.dataset.sortDirection = "desc";
+  } else {
+    event.target.dataset.sortDirection = "asc";
+  }
+  sortList(sortProp, sortDir);
 }
 
-function sortList(sortBy) {
-  let sortedList = students;
+function sortList(prop, dir) {
+  let direction = 1;
+  console.log(direction);
+  if (dir === "desc") {
+    direction = -1;
+  } else {
+    direction = 1;
+  }
+  const sortedList = students.sort(sortByProp);
+  function sortByProp(a, b) {
+    if (a[prop] < b[prop]) {
+      return -1 * direction;
+    } else {
+      return 1 * direction;
+    }
+  }
 
-  if (sortBy === "firstName") {
-    sortedList = sortedList.sort(sortByFirstName);
-  }
-  if (sortBy === "lastName") {
-    sortedList = sortedList.sort(sortByLastName);
-  }
-  if (sortBy === "house") {
-    sortedList = sortedList.sort(sortByHouse);
-  }
-  // console.log("Running sortList");
-  // //const list = students;
-  // console.log("list", list);
-  // const sortedList = list.sort(sortByLastName);
   displayList(sortedList);
-}
-
-function sortByFirstName(a, b) {
-  if (a.firstName < b.firstName) {
-    return -1;
-  } else {
-    return 1;
-  }
-}
-
-function sortByHouse(a, b) {
-  if (a.house < b.house) {
-    return -1;
-  } else {
-    return 1;
-  }
-}
-function sortByLastName(a, b) {
-  if (a.lastName < b.lastName) {
-    return -1;
-  } else {
-    return 1;
-  }
 }
 
 function buildList() {
