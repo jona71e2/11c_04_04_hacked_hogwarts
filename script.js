@@ -20,6 +20,15 @@ const Students = {
 function start() {
   console.log("Program running");
   loadJSON();
+  registerButtons();
+}
+
+function registerButtons() {
+  const buttons = document.querySelectorAll("[data-action='filter']");
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", selectFilter);
+  });
 }
 
 async function loadJSON() {
@@ -49,41 +58,14 @@ function prepareObject(jsonObject) {
   student.firstName = nameParts[0].capitalize();
 
   //middleName
-  // if (nameParts.length > 2 && nameParts.length < 4) {
-  //   student.middleName = nameParts[1].capitalize();
-  // }
   if (nameParts.length > 2) {
     console.log("More than 2", nameParts);
-    //const middleNames = [...nameParts].splice(1).shift();
-
-    /// MIDDLENAMES TEST TEST START --- DELETE AFTERWARDS
-    const test = [
-      "jonas",
-      "bøGh",
-      "PedeSFDFKLMsen",
-      "asdaSSDasdfndsen",
-      "asdmnbvnsen",
-      "Madsen",
-      "asASDastOne",
-      "lAAAAsastRemove",
-    ];
-
-    // //const middleNamesTest = [...test].slice(1, test.lenght - 2);
-    // const middleNamesTest = [...test].slice(1, test.length - 1);
-    // console.log("MiddleNAmesTESTTESTETST", middleNamesTest);
-
-    /// MIDDLENAMES TEST TEST FINISH --- DELETE AFTERWARDS
 
     ///// --- TEST: Make a middleNames array using the slice() method,
     ///and capitalize each item using map() and String.prototype.capitalize
     const middleNames = [...nameParts].slice(1, nameParts.length - 1);
-    console.log(":::MIDDLE NAMES -- SLICE:::", middleNames);
 
     const capitalizeMiddleNames = middleNames.map((i) => i.capitalize());
-    console.log(capitalizeMiddleNames);
-
-    const testCap = test.map((i) => i.capitalize());
-    console.log(testCap);
 
     student.middleName = capitalizeMiddleNames.join(" ");
   }
@@ -110,9 +92,9 @@ function prepareObject(jsonObject) {
     );
   }
 
-  student.gender = jsonObject.gender.trim().capitalize();
+  student.gender = jsonObject.gender.trim().toLowerCase();
 
-  student.house = jsonObject.house.trim().capitalize();
+  student.house = jsonObject.house.trim().toLowerCase();
 
   student.image = `${student.lastName.toLowerCase()}_${student.firstName
     .substring(0, 1)
@@ -126,6 +108,27 @@ function prepareObject(jsonObject) {
   return student;
 }
 
+function selectFilter() {
+  console.log("selectFilter");
+  const filter = this.dataset.filter;
+  console.log(filter);
+  filterList(filter);
+
+  //this.classList.toggle("off");
+}
+
+function filterList(filter) {
+  console.log(students);
+  const filteredList = students.filter((student) => {
+    if (filter === "*") {
+      return true;
+    } else {
+      return student.house === filter;
+    }
+  });
+  displayList(filteredList);
+}
+
 function buildList() {
   console.log("Running buildList");
   const currentList = students; // FUTURE: SORT and Filter list
@@ -133,6 +136,7 @@ function buildList() {
   displayList(currentList);
 }
 
+// The section where all students are appended in the loop-view
 const dataContainer = document.querySelector("#data-container");
 
 function displayList(students) {
@@ -190,22 +194,17 @@ String.prototype.capitalize = function () {
 };
 
 // EKSPERIMENT!!
-String.prototype.middleNamesCap = function () {
-  return this.map((i) => i.capitalize());
-};
+// String.prototype.middleNamesCap = function () {
+//   return this.map((i) => i.capitalize());
+// };
 
 // const names = ["frede", "svendsen", "jørgensen", "pedersen"];
 // console.log(names.map((i) => i.capitalize()));
 
 // console.log(names.middleNamesCap());
 
-const buttons = document.querySelectorAll("button");
+/// --- BUTTONS EVENTLISTENERS START ---  ///
 
-buttons.forEach((btn) => {
-  btn.addEventListener("click", clickBtn);
+/// --- BUTTONS EVENTLISTENERS START ---  ///
 
-  function clickBtn() {
-    console.log("CLICK");
-    this.classList.toggle("off");
-  }
-});
+/// --- FILTERING ---  ///
