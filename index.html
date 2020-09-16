@@ -5,8 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hacked Hogwarts Student List</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <h1 id="page-header">Hogwarts Student List</h1>
+    <div id="house-btns">
+      <button class="off">
+        <img src="images/house_crests/gryffindor.svg" alt="gryffindor" />
+      </button>
+      <button class="off">
+        <img src="images/house_crests/hufflepuff.svg" alt="hufflepuff" />
+      </button>
+      <button class="off">
+        <img src="images/house_crests/ravenclaw.svg" alt="ravenclaw" />
+      </button>
+      <button class="off">
+        <img src="images/house_crests/slytherin.svg" alt="slytherin" />
+      </button>
+    </div>
+
+    <!-- Section where all the clones for each student is appended -->
+    <section id="data-container"></section>
+
+    <!-- The structure for each student in the loop view -->
+    <template id="student-template">
+      <article id="loop-view">
+        <img src="" alt="" id="house-crest-loop" />
+        <div id="name-large">
+          <p id="name-display-large"></p>
+        </div>
+        <div id="name-small">
+          <p id="name-display-small"></p>
+        </div>
+      </article>
+    </template>
+
+    <!-- HTML for pop up -->
+    <section id="pop-up" class="hide">
+      <article id="detail-view"></article>
+    </section>
+
     <script src="script.js"></script>
   </body>
 </html>

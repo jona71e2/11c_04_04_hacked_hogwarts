@@ -16,7 +16,6 @@ const Students = {
   image: "",
   house: "",
 };
-
 function start() {
   console.log("Program running");
   loadJSON();
@@ -36,7 +35,7 @@ function prepareObjects(jsonData) {
   console.log("Return value", students);
 
   //TO DO - add buildList(); function
-  //buildList();
+  buildList();
 }
 
 function prepareObject(jsonObject) {
@@ -59,7 +58,7 @@ function prepareObject(jsonObject) {
     const middleNames = [...nameParts].splice(1).shift();
     console.log(":::MIDDLE NAMES", middleNames);
 
-    //student.middleName = middleNames.map((i) => i.capitalize()).join(" ");
+    student.middleName = middleNames.capitalize();
   }
 
   //lastName
@@ -100,10 +99,86 @@ function prepareObject(jsonObject) {
   return student;
 }
 
+function buildList() {
+  console.log("Running buildList");
+  const currentList = students; // FUTURE: SORT and Filter list
+
+  displayList(currentList);
+}
+
+const dataContainer = document.querySelector("#data-container");
+
+function displayList(students) {
+  console.log("Running displayList");
+  //Clear the list
+  dataContainer.innerHTML = "";
+
+  //build a new list
+  students.forEach(displayStudent);
+}
+
+function displayStudent(student) {
+  console.log("Running displayStudent");
+  //Create clone
+  const clone = document
+    .querySelector("template#student-template")
+    .content.cloneNode(true);
+
+  //Clone data
+  clone.querySelector(
+    "#house-crest-loop"
+  ).src = `images/house_crests/${student.house}.svg`;
+  if (student.middleName === null && student.nickName === null) {
+    clone.querySelector("#name-display-large").textContent = student.firstName;
+    clone.querySelector("#name-display-small").textContent = student.lastName;
+  } else if (student.middleName != null && student.nickName === null) {
+    clone.querySelector("#name-display-large").textContent = student.firstName;
+    clone.querySelector(
+      "#name-display-small"
+    ).textContent = `${student.middleName} ${student.lastName}`;
+  } else if (student.middleName === null && student.nickName != null) {
+    clone.querySelector("#name-display-large").textContent = student.firstName;
+    clone.querySelector(
+      "#name-display-small"
+    ).textContent = `${student.nickName} ${student.lastName}`;
+  } else if (student.middleName != null && student.nickName != null) {
+    clone.querySelector("#name-display-large").textContent = student.firstName;
+    clone.querySelector(
+      "#name-display-small"
+    ).textContent = `"${student.nickName}" ${student.lastName}`;
+  }
+  clone
+    .querySelector("#loop-view")
+    .addEventListener("click", () => showPopUp(student));
+  // append clone to list
+  dataContainer.appendChild(clone);
+}
+
+function showPopUp(student) {
+  console.log("Running showPopUp", student);
+}
+
 String.prototype.capitalize = function () {
   return this[0].toUpperCase() + this.substring(1).toLowerCase();
 };
 
-console.log("Hello");
-const myName = "frede";
-console.log(myName.capitalize());
+//// EKSPERIMENT!!
+// String.prototype.middleNamesCap = function () {
+//   return this.map((i) => i.capitalize());
+// };
+
+// const names = ["frede", "svendsen", "jørgensen", "pedersen"];
+// console.log(names.map((i) => i.capitalize()));
+
+// console.log(names.middleNamesCap());
+
+const buttons = document.querySelectorAll("button");
+
+buttons.forEach((btn) => {
+  btn.addEventListener("click", clickBtn);
+
+  function clickBtn() {
+    console.log("CLICK");
+    this.classList.toggle("off");
+  }
+});
