@@ -24,10 +24,14 @@ function start() {
 }
 
 function registerButtons() {
-  const buttons = document.querySelectorAll("[data-action='filter']");
+  const buttonsFilter = document.querySelectorAll("[data-action='filter']");
+  const buttonsSort = document.querySelectorAll("[data-action='sort']");
 
-  buttons.forEach((btn) => {
+  buttonsFilter.forEach((btn) => {
     btn.addEventListener("click", selectFilter);
+  });
+  buttonsSort.forEach((btn) => {
+    btn.addEventListener("click", selectSort);
   });
 }
 
@@ -127,6 +131,54 @@ function filterList(filter) {
     }
   });
   displayList(filteredList);
+}
+
+function selectSort() {
+  const sort = this.dataset.sort;
+  console.log(sort);
+  sortList(sort);
+}
+
+function sortList(sortBy) {
+  let sortedList = students;
+
+  if (sortBy === "firstName") {
+    sortedList = sortedList.sort(sortByFirstName);
+  }
+  if (sortBy === "lastName") {
+    sortedList = sortedList.sort(sortByLastName);
+  }
+  if (sortBy === "house") {
+    sortedList = sortedList.sort(sortByHouse);
+  }
+  // console.log("Running sortList");
+  // //const list = students;
+  // console.log("list", list);
+  // const sortedList = list.sort(sortByLastName);
+  displayList(sortedList);
+}
+
+function sortByFirstName(a, b) {
+  if (a.firstName < b.firstName) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
+
+function sortByHouse(a, b) {
+  if (a.house < b.house) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
+function sortByLastName(a, b) {
+  if (a.lastName < b.lastName) {
+    return -1;
+  } else {
+    return 1;
+  }
 }
 
 function buildList() {

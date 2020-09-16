@@ -29,6 +29,9 @@ body {
   position: absolute;
 }
 
+#sort-btns > button {
+}
+
 /* BUTTON Styling from this link: https://css-tricks.com/overriding-default-button-styles/ */
 button {
   display: inline-block;
