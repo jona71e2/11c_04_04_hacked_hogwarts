@@ -4,7 +4,8 @@ window.addEventListener("DOMContentLoaded", start);
 
 let students = [];
 
-const endpoint = "https://petlatkea.dk/2020/hogwarts/students.json";
+const endpoint1 = "https://petlatkea.dk/2020/hogwarts/students.json";
+const endpoint2 = "https://petlatkea.dk/2020/hogwarts/families.json";
 
 //The prototype for the student data
 const Students = {
@@ -42,7 +43,7 @@ function registerButtons() {
 }
 
 async function loadJSON() {
-  const response = await fetch(endpoint);
+  const response = await fetch(endpoint1);
   const jsonData = await response.json();
 
   // when loaded, prepare data objects
@@ -52,7 +53,6 @@ async function loadJSON() {
 function prepareObjects(jsonData) {
   students = jsonData.map(prepareObject);
 
-  //TO DO - add buildList(); function
   buildList();
 }
 
@@ -109,6 +109,9 @@ function prepareObject(jsonObject) {
       .substring(student.lastName.indexOf("-") + 1)
       .toLowerCase()}_${student.firstName.substring(0, 1).toLowerCase()}.png`;
   }
+  if (student.image.includes("patil")) {
+    student.image = `${student.lastName.toLowerCase()}_${student.firstName.toLowerCase()}.png`;
+  }
 
   return student;
 }
@@ -155,14 +158,14 @@ function setSort(sortProp, sortDir) {
   buildList();
 }
 
-function sortList(sortedList) {
+function sortList(list) {
   let direction = 1;
   if (settings.sortDir === "desc") {
     direction = -1;
   } else {
     direction = 1;
   }
-  sortedList = students.sort(sortByProp);
+  const sortedList = list.sort(sortByProp);
   function sortByProp(a, b) {
     if (a[settings.sort] < b[settings.sort]) {
       return -1 * direction;
@@ -179,7 +182,7 @@ function buildList() {
   const currentList = filterList(students);
   const sortedList = sortList(currentList);
 
-  displayList(currentList);
+  displayList(sortedList);
 }
 
 // The section where all students are appended in the loop-view
@@ -234,12 +237,38 @@ function showPopUp(student) {
   //console.log("Running showPopUp", student);
 }
 
+function searchStudent(searchString, students) {
+  console.log("running searchStudent");
+  return students.filter((search) => {
+    const regex = new RegExp(searchString, "gi");
+    return (
+      search.firstName.match(regex) ||
+      search.lastName.match(regex) ||
+      search.house.match(regex) ||
+      search.gender.match(regex)
+    );
+  });
+}
+
+function searchValues() {
+  console.log("Running seachValues");
+  console.log(this.value);
+  const searchString = this.value;
+  console.log(searchString);
+  //searchStudent(searchString, students);
+  const searchResult = searchStudent(searchString, students);
+  displayList(searchResult);
+}
+
+const searchInput = document.querySelector(".search");
+searchInput.addEventListener("input", searchValues);
+
 String.prototype.capitalize = function () {
   return this[0].toUpperCase() + this.substring(1).toLowerCase();
 };
 
 // EKSPERIMENT!!
-// String.prototype.middleNamesCap = function () {
+// Array.prototype.middleNamesCap = function () {
 //   return this.map((i) => i.capitalize());
 // };
 
