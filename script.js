@@ -17,6 +17,12 @@ const Students = {
   house: "",
 };
 
+const settings = {
+  filter: "*",
+  sort: "firstName",
+  sortDir: "asc",
+};
+
 function start() {
   console.log("Program running");
   loadJSON();
@@ -45,7 +51,6 @@ async function loadJSON() {
 
 function prepareObjects(jsonData) {
   students = jsonData.map(prepareObject);
-  console.log("Return value", students);
 
   //TO DO - add buildList(); function
   buildList();
@@ -63,8 +68,6 @@ function prepareObject(jsonObject) {
 
   //middleName
   if (nameParts.length > 2) {
-    console.log("More than 2", nameParts);
-
     ///// --- TEST: Make a middleNames array using the slice() method,
     ///and capitalize each item using map() and String.prototype.capitalize
     const middleNames = [...nameParts].slice(1, nameParts.length - 1);
@@ -84,12 +87,10 @@ function prepareObject(jsonObject) {
       student.lastName
         .substring(student.lastName.indexOf("-") + 1)
         .capitalize();
-    //console.log(student.lastName);
   }
 
   //nickName
   if (jsonObject.fullname.includes(`"`)) {
-    console.log("KIG HER:::");
     student.nickName = jsonObject.fullname.substring(
       jsonObject.fullname.indexOf(`"`) + 1,
       jsonObject.fullname.lastIndexOf(`"`)
@@ -113,63 +114,70 @@ function prepareObject(jsonObject) {
 }
 
 function selectFilter() {
-  console.log("selectFilter");
   const filter = this.dataset.filter;
-  console.log(filter);
-  filterList(filter);
+  setFilter(filter);
 
   //this.classList.toggle("off");
 }
 
-function filterList(filter) {
-  console.log(students);
-  const filteredList = students.filter((student) => {
-    if (filter === "*") {
+function setFilter(filter) {
+  settings.filter = filter;
+  buildList();
+}
+
+function filterList(filteredList) {
+  filteredList = students.filter((student) => {
+    if (settings.filter === "*") {
       return true;
     } else {
-      return student.house === filter;
+      return settings.filter === student.house;
     }
   });
-  displayList(filteredList);
+  console.log(filteredList);
+  return filteredList;
 }
 
 function selectSort(event) {
   const sortProp = this.dataset.sort;
   const sortDir = this.dataset.sortDirection;
-  console.log(sortDir, "FIRST FIRST FIRST:::");
 
   if (sortDir == "asc") {
-    console.log("selv");
     event.target.dataset.sortDirection = "desc";
   } else {
     event.target.dataset.sortDirection = "asc";
   }
-  sortList(sortProp, sortDir);
+  setSort(sortProp, sortDir);
 }
 
-function sortList(prop, dir) {
+function setSort(sortProp, sortDir) {
+  settings.sort = sortProp;
+  settings.sortDir = sortDir;
+  buildList();
+}
+
+function sortList(sortedList) {
   let direction = 1;
-  console.log(direction);
-  if (dir === "desc") {
+  if (settings.sortDir === "desc") {
     direction = -1;
   } else {
     direction = 1;
   }
-  const sortedList = students.sort(sortByProp);
+  sortedList = students.sort(sortByProp);
   function sortByProp(a, b) {
-    if (a[prop] < b[prop]) {
+    if (a[settings.sort] < b[settings.sort]) {
       return -1 * direction;
     } else {
       return 1 * direction;
     }
   }
 
-  displayList(sortedList);
+  return sortedList;
 }
 
 function buildList() {
-  console.log("Running buildList");
-  const currentList = students; // FUTURE: SORT and Filter list
+  // console.log("Running buildList");
+  const currentList = filterList(students);
+  const sortedList = sortList(currentList);
 
   displayList(currentList);
 }
@@ -178,7 +186,6 @@ function buildList() {
 const dataContainer = document.querySelector("#data-container");
 
 function displayList(students) {
-  console.log("Running displayList");
   //Clear the list
   dataContainer.innerHTML = "";
 
@@ -224,7 +231,7 @@ function displayStudent(student) {
 }
 
 function showPopUp(student) {
-  console.log("Running showPopUp", student);
+  //console.log("Running showPopUp", student);
 }
 
 String.prototype.capitalize = function () {
