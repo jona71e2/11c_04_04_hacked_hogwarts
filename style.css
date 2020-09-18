@@ -1,3 +1,4 @@
+/* GENERELLE SETTINGS */
 * {
   box-sizing: border-box;
 }
@@ -9,69 +10,60 @@ body {
   font-family: "Roboto Mono", monospace;
 }
 
-/* STYLING AF LOOP VIEW START */
-#name-display-large {
-  font-size: 1.55rem;
-  margin: 0.2rem;
-  font-weight: 600;
+/* All buttons - start */
+
+#house-btns {
+  display: flex;
+  justify-content: flex-end;
+}
+body > div > button > img {
+  height: 6rem;
+  filter: grayscale(80%);
 }
 
-#name-display-small {
-  font-size: 1rem;
-  margin: 0.2rem;
-  font-weight: 200;
+/* All buttons - finish */
+
+/* STYLING AF LOOP VIEW - START */
+#loop-view {
+  box-shadow: 0px 10px 15px 5px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  opacity: 80%;
+  position: relative;
+  /* border: 0.05rem solid #ccc;
+  border-radius: 0.75rem; */
+  border-right: 0.2rem solid #000;
+}
+
+#loop-view:hover {
+  transition: 0.2s ease-in-out;
+  transform: scale(1.01);
+  opacity: 100%;
+}
+
+#person-loop-container {
+  display: flex;
+}
+.name-container {
+  display: flex;
+  margin: 0 0.5rem;
+  align-items: center;
+}
+.name {
+  margin-left: 0.3rem;
 }
 
 #house-crest-loop {
-  width: 7%;
+  width: 4%;
   top: 0;
   right: 1rem;
   position: absolute;
 }
 
-#sort-btns > button {
-}
-
-/* BUTTON Styling from this link: https://css-tricks.com/overriding-default-button-styles/ */
-button {
-  display: inline-block;
-  border: none;
-  /* padding: 1rem 2rem; */
+#image-loop {
+  border-radius: 50%;
+  border: solid black 0.15rem;
+  width: 50%;
   margin: 0.5rem;
-  text-decoration: none;
-  /* background: #ccc; */
-  /* color: #ffffff; */
-  /* font-family: sans-serif;
-  font-size: 1rem; */
-  cursor: pointer;
-  /* text-align: center; */
-  transition: background 250ms ease-in-out, transform 150ms ease;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-button:hover,
-button:focus {
-  /* background: #0053ba; */
-}
-
-button:focus {
-  outline: 1px solid #fff;
-  outline-offset: -4px;
-}
-
-button:active {
-  transform: scale(0.99);
-}
-
-body > div > button > img {
-  height: 6rem;
-  /* filter: grayscale(80%); */
-}
-body > div > button > img:hover {
-  height: 6rem;
-  filter: grayscale(80%);
-  transition: filter 0.5s ease-in-out;
 }
 
 #page-header {
@@ -79,45 +71,21 @@ body > div > button > img:hover {
   font-size: 1.8rem;
 }
 
-#house-btns {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.off {
-  transform: scale(0.95);
-  transition: transform 250ms;
-  /* filter: grayscale(100%); */
-}
-
 #data-container {
-  height: 100%;
+  /* height: 100%; */
   width: 100vw;
   background-color: white;
   max-width: 1250px;
   margin: 0 auto;
   padding: 10px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
   grid-gap: 2rem 1.5rem;
 }
 
-#loop-view {
-  box-shadow: 0px 10px 15px 5px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  opacity: 80%;
-  position: relative;
-}
-
-/* #loop-view:hover {
-  transition: 0.5s ease-in-out;
-  transform: scale(1.02);
-  opacity: 100%;
-} */
-
 /* STYLING AF LOOP VIEW SLUT */
 
-/* STYLING AF POP UP  */
+/* STYLING AF POP UP - start */
 #pop-up {
   position: fixed;
   top: 0;
@@ -139,6 +107,65 @@ body > div > button > img:hover {
   overflow: scroll;
 }
 
+/* STYLING AF POP UP - finish */
+
+/* Classes added or removed in Javascript - start */
+
+.sorting-property {
+  font-weight: 800;
+}
+
 .hide {
   display: none;
 }
+
+.off {
+  transform: scale(0.95);
+  transition: transform 250ms;
+  /* filter: grayscale(100%); */
+}
+
+/* Classes added or removed in Javascript - finish*/
+
+/* BUTTON Styling from this link: https://css-tricks.com/overriding-default-button-styles/ */
+/* button { */
+/* display: inline-block; */
+/* border: none; */
+/* padding: 1rem 2rem; */
+/* margin: 0.5rem; */
+/* text-decoration: none; */
+/* background: #ccc; */
+/* color: #ffffff; */
+/* font-family: sans-serif;
+  font-size: 1rem; */
+/* cursor: pointer; */
+/* text-align: center; */
+/* transition: background 250ms ease-in-out, transform 150ms ease; */
+/* -webkit-appearance: none; */
+/* -moz-appearance: none; */
+/* } */
+
+button:hover,
+button:focus {
+  /* background: #0053ba; */
+}
+
+/* button:focus {
+  outline: 1px solid #fff;
+  outline-offset: -4px;
+}
+
+button:active {
+  transform: scale(0.99);
+}
+
+body > div > button > img {
+  height: 6rem;
+  filter: grayscale(80%);
+}
+
+/* body > div > button > img:hover {
+  height: 6rem;
+  filter: grayscale(80%);
+  transition: filter 0.5s ease-in-out;
+} */
