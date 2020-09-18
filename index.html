@@ -62,12 +62,33 @@
     <!-- The structure for each student in the loop view -->
     <template id="student-template">
       <article id="loop-view">
-        <img src="" alt="" id="house-crest-loop" />
-        <div id="name-large">
-          <p id="name-display-large"></p>
+        <div id="person-loop-container">
+          <div id="image-loop-container">
+            <img src="" alt="" id="image-loop" />
+          </div>
+          <div id="image-loop-container">
+            <img src="" alt="" id="house-crest-loop" />
+          </div>
+          <div class="name-container">
+            <div id="firstname" class="name">
+              <p id="firstname-display"></p>
+            </div>
+            <div id="middlename" class="name">
+              <p id="middlename-display"></p>
+            </div>
+            <div id="nickname" class="name">
+              <p id="nickname-display"></p>
+            </div>
+            <div id="lastname" class="name">
+              <p id="lastname-display"></p>
+            </div>
+          </div>
         </div>
-        <div id="name-small">
-          <p id="name-display-small"></p>
+        <div class="controls-container">
+          <label for="inquisitorial">Inquisitorial Squad</label>
+          <input type="checkbox" name="inquisitorial" id="inquisitorial" />
+          <label for="expel">Expel Student</label>
+          <input type="radio" name="" id="expel" />
         </div>
       </article>
       <!-- <button type="radio" id="expel"></button> -->
@@ -75,7 +96,12 @@
 
     <!-- HTML for pop up -->
     <section id="pop-up" class="hide">
-      <article id="detail-view"></article>
+      <article id="detail-view">
+        <button id="detail-close">X</button>
+        <img src="" alt="" id="housecrest-pop-up" />
+        <img src="" alt="" id="student-img-pop-up" />
+        <h3 id="name-pop-up"></h3>
+      </article>
     </section>
 
     <script src="script.js"></script>
