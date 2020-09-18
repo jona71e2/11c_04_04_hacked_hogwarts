@@ -3,6 +3,8 @@
 window.addEventListener("DOMContentLoaded", start);
 
 let students = [];
+let expel = [];
+let inquisitorial = [];
 
 const endpoint1 = "https://petlatkea.dk/2020/hogwarts/students.json";
 const endpoint2 = "https://petlatkea.dk/2020/hogwarts/families.json";
@@ -16,11 +18,13 @@ const Students = {
   gender: "",
   image: "",
   house: "",
+  expel: false,
+  inquisitorial: false,
 };
 
 const settings = {
   filter: "*",
-  sort: "firstName",
+  sort: "",
   sortDir: "asc",
 };
 
@@ -112,11 +116,17 @@ function prepareObject(jsonObject) {
   if (student.image.includes("patil")) {
     student.image = `${student.lastName.toLowerCase()}_${student.firstName.toLowerCase()}.png`;
   }
+  if (student.image.includes("leanne")) {
+    student.image = `granger_h.png`;
+  }
 
   return student;
 }
 
 function selectFilter() {
+  document.querySelectorAll(".name").forEach((p) => {
+    p.classList.remove("sorting-prop");
+  });
   const filter = this.dataset.filter;
   setFilter(filter);
 
@@ -204,48 +214,136 @@ function displayStudent(student) {
     .content.cloneNode(true);
 
   //Clone data
+  const firstNameSelector = clone.querySelector("#firstname-display");
+  const lastNameSelector = clone.querySelector("#lastname-display");
+  const middleNameSelector = clone.querySelector("#middlename-display");
+  const nickNameSelector = clone.querySelector("#nickname-display");
+
+  clone.querySelector("#image-loop").src = `images/students/${student.image}`;
   clone.querySelector(
     "#house-crest-loop"
   ).src = `images/house_crests/${student.house}.svg`;
   if (student.middleName === null && student.nickName === null) {
-    clone.querySelector("#name-display-large").textContent = student.firstName;
-    clone.querySelector("#name-display-small").textContent = student.lastName;
+    firstNameSelector.textContent = student.firstName;
+    lastNameSelector.textContent = student.lastName;
   } else if (student.middleName != null && student.nickName === null) {
-    clone.querySelector("#name-display-large").textContent = student.firstName;
-    clone.querySelector(
-      "#name-display-small"
-    ).textContent = `${student.middleName} ${student.lastName}`;
+    firstNameSelector.textContent = student.firstName;
+    middleNameSelector.textContent = student.middleName;
+    lastNameSelector.textContent = student.lastName;
   } else if (student.middleName === null && student.nickName != null) {
-    clone.querySelector("#name-display-large").textContent = student.firstName;
-    clone.querySelector(
-      "#name-display-small"
-    ).textContent = `${student.nickName} ${student.lastName}`;
+    firstNameSelector.textContent = student.firstName;
+    nickNameSelector.textContent = student.nickName;
+    lastNameSelector.textContent = student.lastName;
   } else if (student.middleName != null && student.nickName != null) {
-    clone.querySelector("#name-display-large").textContent = student.firstName;
-    clone.querySelector(
-      "#name-display-small"
-    ).textContent = `"${student.nickName}" ${student.lastName}`;
+    firstNameSelector.textContent = student.firstName;
+    middleNameSelector.textContent = student.middleName;
+    nickNameSelector.textContent = student.nickName;
+    lastNameSelector.textContent = student.lastName;
+  }
+  if (settings.sort === "firstName") {
+    firstNameSelector.classList.add("sorting-property");
+  }
+  if (settings.sort === "lastName") {
+    lastNameSelector.classList.add("sorting-property");
+  }
+
+  clone
+    .querySelector("#inquisitorial")
+    .addEventListener("click", () => addStudentToInquisitorial(student));
+  function addStudentToInquisitorial(student) {
+    console.log("Inquisitorial", student);
+    if (student.inquisitorial === false) {
+      student.inquisitorial = true;
+    } else {
+      student.inquisitorial = false;
+    }
+    console.log(student.inquisitorial);
+    inquisitorial.push(student);
+    inquisitorialList();
   }
   clone
-    .querySelector("#loop-view")
+    .querySelector("#expel")
+    .addEventListener("click", () => expelStudent(student));
+  function expelStudent(student) {
+    console.log("EXPELLING YOU", student);
+    student.expel = true;
+    console.log(student.expel);
+    expelledList();
+  }
+
+  clone
+    .querySelector("#person-loop-container")
     .addEventListener("click", () => showPopUp(student));
   // append clone to list
   dataContainer.appendChild(clone);
 }
 
+function inquisitorialList() {
+  console.log("inquisitorialList");
+  const inquisitorialList = students.filter((student) => {
+    if (student.inquisitorial === true) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  inquisitorial = inquisitorialList;
+  console.log(inquisitorialList, ":::::::");
+  console.log(inquisitorial, "GLOBAL");
+}
+
+function expelledList() {
+  console.log("expelledList");
+  const expelList = students.filter((student) => {
+    if (student.expel === true) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  expel = expelList;
+  console.log(expelList, ":::::::");
+  console.log(expel, "EXPEL ... --- GLOBAL");
+}
+
 function showPopUp(student) {
-  //console.log("Running showPopUp", student);
+  console.log("Running showPopUp", student);
+  const popUp = document.querySelector("#pop-up");
+  popUp.classList.remove("hide");
+  popUp
+    .querySelector("button")
+    .addEventListener("click", () => popUp.classList.add("hide"));
+
+  let namePopUp = document.querySelector("#name-pop-up");
+  if (student.middleName === null && student.middleName === null) {
+    namePopUp.textContent = `${student.firstName} ${student.lastName}`;
+  } else if (student.middleName !== null) {
+    namePopUp.textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
+  } else if (student.nickName !== null) {
+    namePopUp.textContent = `${student.firstName} ${student.nickName} ${student.lastName}`;
+  }
+
+  document.querySelector(
+    "#housecrest-pop-up"
+  ).src = `images/house_crests/${student.house}.svg`;
+  document.querySelector(
+    "#student-img-pop-up"
+  ).src = `images/students/${student.image}`;
 }
 
 function searchStudent(searchString, students) {
   console.log("running searchStudent");
   return students.filter((search) => {
     const regex = new RegExp(searchString, "gi");
+    if (search.middleName === null) {
+      search.middleName = "";
+    }
     return (
       search.firstName.match(regex) ||
       search.lastName.match(regex) ||
-      search.house.match(regex) ||
-      search.gender.match(regex)
+      search.middleName.match(regex)
+      //search.house.match(regex) ||
+      //search.gender.match(regex)
     );
   });
 }
