@@ -69,6 +69,12 @@ body > div > button > img {
 #page-header {
   font-family: "Roboto Mono", monospace;
   font-size: 1.8rem;
+  text-align: center;
+}
+
+.about {
+  margin: auto;
+  width: 50%;
 }
 
 #data-container {
@@ -105,6 +111,36 @@ body > div > button > img {
   /* position: fixed; */
   margin: 10% 20%;
   overflow: scroll;
+}
+
+.detail-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+#student-img-pop-up {
+  position: relative;
+  width: 65%;
+  top: 2rem;
+  left: 2rem;
+}
+#housecrest-pop-up {
+  width: 15%;
+  position: relative;
+  bottom: -10rem;
+  left: -6rem;
+}
+
+.modal-close-pop-up {
+  position: absolute;
+  top: 0;
+}
+
+.student-info {
+  text-align: left;
 }
 
 /* STYLING AF POP UP - finish */
