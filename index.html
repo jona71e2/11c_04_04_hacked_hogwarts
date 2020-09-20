@@ -12,13 +12,18 @@
   </head>
   <body>
     <h1 id="page-header">Hogwarts Student List</h1>
+    <div class="about">
+      <h2>About</h2>
+      <p class="total-number"></p>
+      <p class="expelled-number"></p>
+      <p class="number-by-house"></p>
+      <p class="currently-displayed"></p>
+    </div>
+
     <form class="search-form">
       <input type="text" class="search" placeholder="Search" />
-      <!-- <ul class="suggestions">
-        <li>Filter for a city</li>
-        <li>or a state</li>
-      </ul> -->
     </form>
+
     <div id="house-btns">
       <button class="filter" data-action="filter" data-filter="*">ALL</button>
       <button class="filter" data-action="filter" data-filter="gryffindor">
@@ -105,10 +110,21 @@
     <!-- HTML for pop up -->
     <section id="pop-up" class="hide">
       <article id="detail-view">
-        <button class="modal-close">X</button>
-        <img src="" alt="" id="housecrest-pop-up" />
-        <img src="" alt="" id="student-img-pop-up" />
-        <h3 id="name-pop-up"></h3>
+        <div class="detail-wrapper">
+          <button class="modal-close-pop-up">X</button>
+          <div class="images">
+            <img src="" alt="" id="student-img-pop-up" />
+            <img src="" alt="" id="housecrest-pop-up" />
+          </div>
+          <div class="student-info">
+            <p class="name"></p>
+            <p class="house"></p>
+            <p class="bloodtype"></p>
+            <p class="prefect"></p>
+            <p class="inquisitorial"></p>
+            <p class="expelled"></p>
+          </div>
+        </div>
       </article>
     </section>
 
