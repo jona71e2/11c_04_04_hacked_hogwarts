@@ -218,6 +218,30 @@ function buildList() {
   const sortedList = sortList(currentList);
   //console.log(sortedList);
 
+  //UPDATING THE ABOUT NUMBERS:
+  document.querySelector(
+    ".about .total-number"
+  ).textContent = `Number of students: ${students.length}`;
+  document.querySelector(
+    ".about .expelled-number"
+  ).textContent = `Number of expelled students: ${expel.length}`;
+  document.querySelector(
+    ".about .number-by-house"
+  ).textContent = `Students by house: Gryffindor: ${
+    students.filter((student) => student.house === "gryffindor").length
+  }, Hufflepuff: ${
+    students.filter((student) => student.house === "hufflepuff").length
+  }, Ravenclaw: ${
+    students.filter((student) => student.house === "ravenclaw").length
+  }, Slytherin: ${
+    students.filter((student) => student.house === "slytherin").length
+  }`;
+
+  //This does not work when typing something in the search input.
+  document.querySelector(
+    ".about .currently-displayed"
+  ).textContent = `Number of students currently displayed: ${sortedList.length}`;
+
   displayList(sortedList);
 }
 
@@ -516,15 +540,52 @@ function showPopUp(student) {
     .querySelector("button")
     .addEventListener("click", () => popUp.classList.add("hide"));
 
-  let namePopUp = document.querySelector("#name-pop-up");
+  const namePopUp = document.querySelector("#detail-view .name");
   if (student.middleName === null && student.middleName === null) {
-    namePopUp.textContent = `${student.firstName} ${student.lastName}`;
+    namePopUp.textContent = `Name: ${student.firstName} ${student.lastName}`;
   } else if (student.middleName !== null) {
-    namePopUp.textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
+    namePopUp.textContent = `Name: ${student.firstName} ${student.middleName} ${student.lastName}`;
   } else if (student.nickName !== null) {
-    namePopUp.textContent = `${student.firstName} ${student.nickName} ${student.lastName}`;
+    namePopUp.textContent = `Name: ${student.firstName} ${student.nickName} ${student.lastName}`;
   }
 
+  document.querySelector(
+    "#detail-view .house"
+  ).textContent = `House: ${student.house.capitalize()}`;
+
+  document.querySelector(
+    "#detail-view .bloodtype"
+  ).textContent = `Blood-status: ${student.bloodStatus.capitalize()}`;
+
+  if (student.prefect === true) {
+    document.querySelector(
+      "#detail-view .prefect"
+    ).textContent = `Prefect: Yes`;
+  } else {
+    document.querySelector("#detail-view .prefect").textContent = `Prefect: No`;
+  }
+
+  if (student.inquisitorial === true) {
+    document.querySelector(
+      "#detail-view .inquisitorial"
+    ).textContent = `Part of Inquisitorial Squad: Yes`;
+  } else {
+    document.querySelector(
+      "#detail-view .inquisitorial"
+    ).textContent = `Part of Inquisitorial Squad: No`;
+  }
+
+  if (student.expel === true) {
+    document.querySelector(
+      "#detail-view .expelled"
+    ).textContent = `${student.firstName} is expelled: Yes`;
+  } else {
+    document.querySelector(
+      "#detail-view .expelled"
+    ).textContent = `${student.firstName} is expelled: No`;
+  }
+
+  // Setting the images for stundent and housecrest
   document.querySelector(
     "#housecrest-pop-up"
   ).src = `images/house_crests/${student.house}.svg`;
@@ -608,7 +669,16 @@ function hackTheSystem() {
 
   // - create an object - from student prototype
 
-  const myself = Object.create(Students);
+  const hackerMe = Object.create(Students);
+  hackerMe.firstName = "Jonas";
+  hackerMe.lastName = "Bøgh";
+  hackerMe.gender = "boy";
+  hackerMe.house = "gryffindor";
+  hackerMe.bloodStatus = "half";
+  hackerMe.bloodStatus = "half";
+  hackerMe.prefect = true;
+  hackerMe.inquisitorial = false;
+
   //myself.firstName = //
   //myself.prop1 = //
   //myself.prop2 = //
