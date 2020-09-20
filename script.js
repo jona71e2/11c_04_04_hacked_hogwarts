@@ -273,13 +273,7 @@ function displayStudent(student) {
     lastNameSelector.classList.add("sorting-property");
   }
 
-  // if (student.house !== "slytherin") {
-  //   clone.querySelector("#inquisitorial").disabled = true;
-  // } else {
-  //   clone
-  //     .querySelector("#inquisitorial")
-  //     .addEventListener("click", () => addStudentToInquisitorial(student));
-  // }
+  //INQUISITORIAL
 
   //Makes sure, that the iquisitorial-button is checket
   //after filtering and sorting - if the student is on the inquis. squad.
@@ -297,6 +291,20 @@ function displayStudent(student) {
     // MAKE removeFromInqSquat function
     // }
     checkInquisitorialStatus(student);
+  }
+
+  // PREFECTS
+  if (student.prefect === true) {
+    clone.querySelector("#prefect").checked = true;
+  }
+
+  clone
+    .querySelector("#prefect")
+    .addEventListener("click", () => clickPrefectButton(student));
+
+  function clickPrefectButton(student) {
+    console.log("PREFECT", student);
+    checkPrefectStatus(student);
   }
 
   clone
@@ -334,6 +342,70 @@ function checkInquisitorialRequirements(student) {
     inquisitorialList();
   } else {
     checkCheckBoxes();
+  }
+}
+
+function checkPrefectStatus(student) {
+  console.log("Running checkPrefectStatus", student);
+  if (student.prefect === true) {
+    student.prefect = false;
+    //Remove this function call later on
+    //checkPrefectRequirements(student);
+  } else {
+    //Set this to true later on - only call the function here
+    //student.prefect = true;
+    checkPrefectRequirements(student);
+  }
+}
+
+function checkPrefectRequirements(student) {
+  console.log("Running checkPrefectRequirements");
+  // Checks if there is already a prefect that matches both
+  // house and gender
+  // if not: make student a prefect
+  // if there is already one: ignore or remove the existing prefect
+
+  //Filtering for all prefects
+  const prefects = students.filter((student) => student.prefect);
+  console.log("Prefect filtered list:", prefects);
+
+  //Filtering the list of all prefects to find prefects
+  // who matches both house and gender of the selected student
+  const otherMathingPrefects = prefects
+    .filter(
+      (prefect) =>
+        prefect.gender === student.gender && prefect.house === student.house
+    )
+    .shift();
+  console.log(otherMathingPrefects);
+
+  if (otherMathingPrefects === undefined) {
+    makePrefect(student);
+  } else {
+    // Ask the user to either:
+    //Remove the existing prefect and add the selected
+    //OR
+    //Ignore
+    console.log(`Only one ${student.gender} from ${student.house} can be prefect.
+    Do you want to add ${student.firstName} or keep ${otherMathingPrefects.firstName}?`);
+
+    // removePrefect(otherMathingPrefects);
+    // console.log(
+    //   `There is already one mathing house and gender - it is ${otherMathingPrefects.firstName}`
+    // );
+  }
+  // console.log(
+  //   `there are one mathing prefect - it is ${otherMathingPrefects.firstName}`
+  // );
+
+  function removePrefect(other) {
+    console.log("Running removePrefect - other", other);
+    other.prefect = false;
+    console.log("From removed Function:", prefects);
+  }
+  function makePrefect(student) {
+    console.log("Running makePrefect");
+    student.prefect = true;
   }
 }
 
