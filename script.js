@@ -275,12 +275,13 @@ function displayStudent(student) {
 
   //INQUISITORIAL
 
-  //Makes sure, that the iquisitorial-button is checket
+  //Makes sure, that the iquisitorial-button is checked
   //after filtering and sorting - if the student is on the inquis. squad.
   if (student.inquisitorial === true) {
     clone.querySelector("#inquisitorial").checked = true;
   }
 
+  //Eventlistener on inqusitorial button
   clone
     .querySelector("#inquisitorial")
     .addEventListener("click", () => clickInquisitorialButton(student));
@@ -294,10 +295,13 @@ function displayStudent(student) {
   }
 
   // PREFECTS
+
+  //Makes sure, that the prefect-button is checked
+  //after filtering and sorting - if the student is a prefect.
   if (student.prefect === true) {
     clone.querySelector("#prefect").checked = true;
   }
-
+  //Eventlistener on prefect button
   clone
     .querySelector("#prefect")
     .addEventListener("click", () => clickPrefectButton(student));
@@ -307,12 +311,13 @@ function displayStudent(student) {
     checkPrefectStatus(student);
   }
 
+  //Eventlistener on expel button
   clone
     .querySelector("#expel")
-    .addEventListener("click", () => clickExpelButton(student, target));
+    .addEventListener("click", () => clickExpelButton(student));
   function clickExpelButton(student) {
     console.log("EXPELLING YOU", student);
-    expelStudent(student, target);
+    expelStudent(student);
   }
 
   clone
@@ -349,11 +354,7 @@ function checkPrefectStatus(student) {
   console.log("Running checkPrefectStatus", student);
   if (student.prefect === true) {
     student.prefect = false;
-    //Remove this function call later on
-    //checkPrefectRequirements(student);
   } else {
-    //Set this to true later on - only call the function here
-    //student.prefect = true;
     checkPrefectRequirements(student);
   }
 }
@@ -388,11 +389,11 @@ function checkPrefectRequirements(student) {
     //Ignore
 
     document.querySelector("#prefect-warning").classList.remove("hide");
+
+    //Adding eventlisteners to the buttons (user-choises) inside the dialog
     document
       .querySelector("#prefect-warning .modal-close")
       .addEventListener("click", closeDialog);
-
-    //Adding eventlisteners to the user-choises inside the dialog
     document
       .querySelector("#prefect-warning #make-new-prefect")
       .addEventListener("click", clickNewPrefect);
@@ -429,7 +430,7 @@ function checkPrefectRequirements(student) {
       buildList();
     }
 
-    //Adding the text to the dialog box
+    //Adding text to the dialog box
     document.querySelector(
       "#prefect-warning .dialog-message"
     ).textContent = `Only one ${
@@ -446,22 +447,14 @@ function checkPrefectRequirements(student) {
       otherMathingPrefects.firstName
     }?`);
 
-    //Adding text to the button inside dialog
+    //Adding text to the buttons inside dialog
     document.querySelector(
       "#prefect-warning #make-new-prefect"
     ).textContent = `Make ${student.firstName} prefect`;
     document.querySelector(
       "#prefect-warning #keep-current-prefect"
     ).textContent = `Keep ${otherMathingPrefects.firstName}`;
-
-    // removePrefect(otherMathingPrefects);
-    // console.log(
-    //   `There is already one mathing house and gender - it is ${otherMathingPrefects.firstName}`
-    // );
   }
-  // console.log(
-  //   `there are one mathing prefect - it is ${otherMathingPrefects.firstName}`
-  // );
 
   function removePrefect(other) {
     console.log("Running removePrefect - other", other);
@@ -474,20 +467,17 @@ function checkPrefectRequirements(student) {
   }
 }
 
-function expelStudent(student, taget) {
+function expelStudent(student) {
   console.log("expelStudent", student);
-  document.querySelectorAll("#expel").forEach((btn) => {
-    btn.removeEventListener();
-  });
+  student.expel = true;
+  console.log(student.expel);
+  //Adding the expelled student to the global array of expelled students
+  expel.push(student);
+  //Expelling from the students list
+  students.splice(students.indexOf(student), 1);
+  console.log(students);
 
-  // student.expel = true;
-  // console.log(student.expel);
-  // //Expelling
-  // students.splice(students.indexOf(student), 1);
-  // console.log(students);
-
-  // expelledList();
-  // setTimeout(buildList, 1500);
+  setTimeout(buildList, 1500);
 }
 
 function inquisitorialList() {
@@ -504,19 +494,19 @@ function inquisitorialList() {
   console.log(inquisitorial, "GLOBAL inquisisisis");
 }
 
-function expelledList() {
-  console.log("expelledList");
-  const expelList = students.filter((student) => {
-    if (student.expel === true) {
-      return true;
-    } else {
-      return false;
-    }
-  });
-  expel = expelList;
-  console.log(expelList, ":::::::");
-  console.log(expel, "EXPEL ... --- GLOBAL");
-}
+// function expelledList() {
+//   console.log("expelledList");
+//   const expelList = students.filter((student) => {
+//     if (student.expel === true) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   });
+//   expel = expelList;
+//   console.log(expelList, ":::::::");
+//   console.log(expel, "EXPEL ... --- GLOBAL");
+// }
 
 function showPopUp(student) {
   console.log("Running showPopUp", student);
@@ -543,41 +533,56 @@ function showPopUp(student) {
   ).src = `images/students/${student.image}`;
 }
 
-function searchStudent(searchString, students) {
-  console.log("running searchStudent");
-  return students.filter((search) => {
-    const regex = new RegExp(searchString, "gi");
-    if (search.middleName === null) {
-      search.middleName = "";
-    }
-    return (
-      search.firstName.match(regex) ||
-      search.lastName.match(regex) ||
-      search.middleName.match(regex)
-      //search.house.match(regex) ||
-      //search.gender.match(regex)
-    );
-  });
-}
-
-function searchValues() {
-  console.log("Running seachValues");
-  console.log(this.value);
-  const searchString = this.value;
-  console.log(searchString);
-  const searchResult = searchStudent(searchString, students);
-  displayList(searchResult);
-}
+//SEARCHING: This part is inspired by a javascript-course from this page:
+//https://javascript30.com/ - day 6 "Ajax Type Ahead"
 
 //Input from search field
 const searchInput = document.querySelector(".search");
 searchInput.addEventListener("input", searchValues);
 
+function searchValues() {
+  console.log("Running seachValues");
+  console.log(this.value);
+  //Storing the search input
+  const searchString = this.value;
+  console.log(searchString);
+  //Calling the searchStudent function with the searchString
+  //and the global students array.
+  const searchResult = searchStudent(searchString, students);
+  //Calling the displayList function with the return-value
+  //from the call above.
+  displayList(searchResult);
+}
+
+function searchStudent(searchString, students) {
+  console.log("running searchStudent");
+  //Filtering the students array - using the new RegExp function,
+  //parsing the searchString from the searchValues-function as argument.
+  return students.filter((search) => {
+    const regex = new RegExp(searchString, "gi");
+    //making sure that the middleName doesn't return undefined.
+    if (search.middleName === null) {
+      search.middleName = "";
+    }
+    //Returning matches for either firstName, lastName, middleName, house or gender
+    return (
+      search.firstName.match(regex) ||
+      search.lastName.match(regex) ||
+      search.middleName.match(regex) ||
+      search.house.match(regex) ||
+      search.gender.match(regex)
+    );
+  });
+}
+
+// String prototype - to capitalize first letter in a string.
 String.prototype.capitalize = function () {
   return this[0].toUpperCase() + this.substring(1).toLowerCase();
 };
 
 // EKSPERIMENT!!
+// Array prototype intended to map over an array,
+// and capitalize every item. (In case, there is more than one middleName e.g.)
 // Array.prototype.middleNamesCap = function () {
 //   return this.map((i) => i.capitalize());
 // };
