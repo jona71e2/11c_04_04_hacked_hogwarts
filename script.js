@@ -26,6 +26,7 @@ const Students = {
   expel: false,
   inquisitorial: false,
   bloodStatus: "set status",
+  prefect: false,
 };
 
 const settings = {
@@ -68,12 +69,12 @@ function prepareObjects(jsonData) {
 
 function prepareBlood(jsonData) {
   // Fetching the second json-file is made with Daniel
-  console.log(jsonData);
+  //console.log(jsonData);
   const jsonBlood = jsonData;
-  console.log(jsonBlood, "JSON 2");
+  //console.log(jsonBlood, "JSON 2");
   // students = jsonData.map(prepareObject);
   students.forEach((student) => {
-    console.log(student);
+    //console.log(student);
     if (jsonBlood.pure.includes(student.lastName)) {
       student.bloodStatus = "pure";
     } else if (jsonBlood.half.includes(student.lastName)) {
@@ -170,7 +171,7 @@ function filterList(filteredList) {
       return settings.filter === student.house;
     }
   });
-  console.log(filteredList);
+  //console.log(filteredList);
   return filteredList;
 }
 
@@ -215,7 +216,7 @@ function buildList() {
   // console.log("Running buildList");
   const currentList = filterList(students);
   const sortedList = sortList(currentList);
-  console.log(sortedList);
+  //console.log(sortedList);
 
   displayList(sortedList);
 }
@@ -232,7 +233,7 @@ function displayList(students) {
 }
 
 function displayStudent(student) {
-  console.log("Running displayStudent");
+  //console.log("Running displayStudent");
   //Create clone
   const clone = document
     .querySelector("template#student-template")
@@ -288,51 +289,22 @@ function displayStudent(student) {
 
   clone
     .querySelector("#inquisitorial")
-    .addEventListener("click", () => clickInquisitorial(student));
+    .addEventListener("click", () => clickInquisitorialButton(student));
 
-  function clickInquisitorial(student) {
+  function clickInquisitorialButton(student) {
     // if (hasBeenHacked) {
     //   setTimeout (removeFromInqSquat, 2000, student);
     // MAKE removeFromInqSquat function
     // }
     checkInquisitorialStatus(student);
-
-    // if (student.inquisitorial === true) {
-    //   student.inquisitorial = false;
-    // } else if (student.inquisitorial === false) {
-    //   checkForInquisitorialRequirement(student);
-    // }
-
-    //// EKSPERIMENT:::::
-    // if (
-    //   (student.inquisitorial === false && student.bloodStatus === "pure") ||
-    //   (student.inquisitorial === false && student.house === "slytherin")
-    // ) {
-    //   student.inquisitorial = true;
-    // } else {
-    //   console.log("not pure blood - not eligible for IQUIS SQUAD");
-    //   alert("Cannot be added to iquisitorial squad");
-    //   student.inquisitorial = false;
-    // }
-    // console.log(student.inquisitorial);
-    // inquisitorial.push(student);
-    // inquisitorialList();
-    // checkCheckBoxes();
   }
 
   clone
     .querySelector("#expel")
-    .addEventListener("click", () => expelStudent(student));
-  function expelStudent(student) {
+    .addEventListener("click", () => clickExpelButton(student, target));
+  function clickExpelButton(student) {
     console.log("EXPELLING YOU", student);
-    student.expel = true;
-    console.log(student.expel);
-    //Expelling
-    students.splice(students.indexOf(student), 1);
-    console.log(students);
-
-    expelledList();
-    setTimeout(buildList, 1500);
+    expelStudent(student, target);
   }
 
   clone
@@ -352,25 +324,33 @@ function checkInquisitorialStatus(student) {
     checkInquisitorialRequirements(student);
   }
   console.log(student);
-
-  // if (student.house === "slytherin" || student.bloodStatus === "pure") {
-  //   console.log("Join inquis");
-  //   student.inquisitorial = true;
-  // } else {
-  //   console.log("DESVÆRRE - kun for udvalgte");
-  // }
-  // checkCheckBoxes();
 }
 
 function checkInquisitorialRequirements(student) {
   console.log("STUDENTER CHECK::::", student);
   if (student.house === "slytherin" || student.bloodStatus === "pure") {
     student.inquisitorial = true;
-    inquisitorial.push(student);
-    console.log("ARRAY OF INQUIS - global", inquisitorial);
+    //inquisitorial.push(student);
+    inquisitorialList();
   } else {
     checkCheckBoxes();
   }
+}
+
+function expelStudent(student, taget) {
+  console.log("expelStudent", student);
+  document.querySelectorAll("#expel").forEach((btn) => {
+    btn.removeEventListener();
+  });
+
+  // student.expel = true;
+  // console.log(student.expel);
+  // //Expelling
+  // students.splice(students.indexOf(student), 1);
+  // console.log(students);
+
+  // expelledList();
+  // setTimeout(buildList, 1500);
 }
 
 function inquisitorialList() {
@@ -384,7 +364,7 @@ function inquisitorialList() {
   });
   inquisitorial = inquisitorialList;
   console.log(inquisitorialList, ":::::::");
-  console.log(inquisitorial, "GLOBAL");
+  console.log(inquisitorial, "GLOBAL inquisisisis");
 }
 
 function expelledList() {
@@ -448,11 +428,11 @@ function searchValues() {
   console.log(this.value);
   const searchString = this.value;
   console.log(searchString);
-  //searchStudent(searchString, students);
   const searchResult = searchStudent(searchString, students);
   displayList(searchResult);
 }
 
+//Input from search field
 const searchInput = document.querySelector(".search");
 searchInput.addEventListener("input", searchValues);
 
