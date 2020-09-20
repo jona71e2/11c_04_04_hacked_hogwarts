@@ -116,7 +116,7 @@ body > div > button > img {
 }
 
 .hide {
-  display: none;
+  visibility: hidden;
 }
 
 .off {
@@ -169,3 +169,36 @@ body > div > button > img {
   filter: grayscale(80%);
   transition: filter 0.5s ease-in-out;
 } */
+
+/* MODAL DIALOG START */
+.modal {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.51);
+  overflow: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog {
+  height: 80%;
+  width: 60%;
+  background-color: white;
+  cursor: pointer;
+  justify-content: center;
+  text-align: center;
+  margin: 10% 20%;
+  position: absolute;
+  padding: 3rem;
+}
+
+.modal-close {
+  position: absolute;
+  top: -0.75rem;
+  right: -0.75rem;
+}
+
+/* MODAL DIALOG Finish */
