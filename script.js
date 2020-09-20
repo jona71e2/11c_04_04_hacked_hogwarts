@@ -386,8 +386,73 @@ function checkPrefectRequirements(student) {
     //Remove the existing prefect and add the selected
     //OR
     //Ignore
-    console.log(`Only one ${student.gender} from ${student.house} can be prefect.
-    Do you want to add ${student.firstName} or keep ${otherMathingPrefects.firstName}?`);
+
+    document.querySelector("#prefect-warning").classList.remove("hide");
+    document
+      .querySelector("#prefect-warning .modal-close")
+      .addEventListener("click", closeDialog);
+
+    //Adding eventlisteners to the user-choises inside the dialog
+    document
+      .querySelector("#prefect-warning #make-new-prefect")
+      .addEventListener("click", clickNewPrefect);
+    document
+      .querySelector("#prefect-warning #keep-current-prefect")
+      .addEventListener("click", clickCurrentPrefect);
+
+    function closeDialog() {
+      document.querySelector("#prefect-warning").classList.add("hide");
+      document
+        .querySelector("#prefect-warning .modal-close")
+        .removeEventListener("click", closeDialog);
+      document
+        .querySelector("#prefect-warning #make-new-prefect")
+        .removeEventListener("click", clickNewPrefect);
+      document
+        .querySelector("#prefect-warning #keep-current-prefect")
+        .removeEventListener("click", clickCurrentPrefect);
+      buildList();
+    }
+
+    function clickNewPrefect() {
+      console.log("Running clickNewPrefect");
+      makePrefect(student);
+      removePrefect(otherMathingPrefects);
+      closeDialog();
+      buildList();
+    }
+
+    function clickCurrentPrefect() {
+      console.log("Running clickCurrentPrefect");
+      makePrefect(otherMathingPrefects);
+      closeDialog();
+      buildList();
+    }
+
+    //Adding the text to the dialog box
+    document.querySelector(
+      "#prefect-warning .dialog-message"
+    ).textContent = `Only one ${
+      student.gender
+    } from ${student.house.capitalize()} can be prefect.
+      Do you want to make ${student.firstName} a prefect or keep ${
+      otherMathingPrefects.firstName
+    }?`;
+
+    console.log(`Only one ${
+      student.gender
+    } from ${student.house.capitalize()} can be prefect.
+    Do you want to add ${student.firstName} or keep ${
+      otherMathingPrefects.firstName
+    }?`);
+
+    //Adding text to the button inside dialog
+    document.querySelector(
+      "#prefect-warning #make-new-prefect"
+    ).textContent = `Make ${student.firstName} prefect`;
+    document.querySelector(
+      "#prefect-warning #keep-current-prefect"
+    ).textContent = `Keep ${otherMathingPrefects.firstName}`;
 
     // removePrefect(otherMathingPrefects);
     // console.log(
