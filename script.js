@@ -6,8 +6,13 @@ let students = [];
 let expel = [];
 let inquisitorial = [];
 
-const endpoint1 = "https://petlatkea.dk/2020/hogwarts/students.json";
-const endpoint2 = "https://petlatkea.dk/2020/hogwarts/families.json";
+let hasBeenHacked = false;
+
+// const endpoint1 = "https://petlatkea.dk/2020/hogwarts/students.json";
+// const endpoint2 = "https://petlatkea.dk/2020/hogwarts/families.json";
+
+loadJSON("https://petlatkea.dk/2020/hogwarts/students.json", prepareObjects);
+loadJSON("https://petlatkea.dk/2020/hogwarts/families.json", prepareBlood);
 
 //The prototype for the student data
 const Students = {
@@ -20,6 +25,7 @@ const Students = {
   house: "",
   expel: false,
   inquisitorial: false,
+  bloodStatus: "set status",
 };
 
 const settings = {
@@ -30,7 +36,7 @@ const settings = {
 
 function start() {
   console.log("Program running");
-  loadJSON();
+  //loadJSON();
   registerButtons();
 }
 
@@ -46,18 +52,36 @@ function registerButtons() {
   });
 }
 
-async function loadJSON() {
-  const response = await fetch(endpoint1);
+async function loadJSON(url, callback) {
+  const response = await fetch(url);
   const jsonData = await response.json();
 
   // when loaded, prepare data objects
-  prepareObjects(jsonData);
+  callback(jsonData);
 }
 
 function prepareObjects(jsonData) {
   students = jsonData.map(prepareObject);
 
   buildList();
+}
+
+function prepareBlood(jsonData) {
+  // Fetching the second json-file is made with Daniel
+  console.log(jsonData);
+  const jsonBlood = jsonData;
+  console.log(jsonBlood, "JSON 2");
+  // students = jsonData.map(prepareObject);
+  students.forEach((student) => {
+    console.log(student);
+    if (jsonBlood.pure.includes(student.lastName)) {
+      student.bloodStatus = "pure";
+    } else if (jsonBlood.half.includes(student.lastName)) {
+      student.bloodStatus = "half";
+    } else {
+      student.bloodStatus = "muggle";
+    }
+  });
 }
 
 function prepareObject(jsonObject) {
@@ -191,6 +215,7 @@ function buildList() {
   // console.log("Running buildList");
   const currentList = filterList(students);
   const sortedList = sortList(currentList);
+  console.log(sortedList);
 
   displayList(sortedList);
 }
@@ -247,20 +272,54 @@ function displayStudent(student) {
     lastNameSelector.classList.add("sorting-property");
   }
 
+  // if (student.house !== "slytherin") {
+  //   clone.querySelector("#inquisitorial").disabled = true;
+  // } else {
+  //   clone
+  //     .querySelector("#inquisitorial")
+  //     .addEventListener("click", () => addStudentToInquisitorial(student));
+  // }
+
+  //Makes sure, that the iquisitorial-button is checket
+  //after filtering and sorting - if the student is on the inquis. squad.
+  if (student.inquisitorial === true) {
+    clone.querySelector("#inquisitorial").checked = true;
+  }
+
   clone
     .querySelector("#inquisitorial")
-    .addEventListener("click", () => addStudentToInquisitorial(student));
-  function addStudentToInquisitorial(student) {
-    console.log("Inquisitorial", student);
-    if (student.inquisitorial === false) {
-      student.inquisitorial = true;
-    } else {
-      student.inquisitorial = false;
-    }
-    console.log(student.inquisitorial);
-    inquisitorial.push(student);
-    inquisitorialList();
+    .addEventListener("click", () => clickInquisitorial(student));
+
+  function clickInquisitorial(student) {
+    // if (hasBeenHacked) {
+    //   setTimeout (removeFromInqSquat, 2000, student);
+    // MAKE removeFromInqSquat function
+    // }
+    checkInquisitorialStatus(student);
+
+    // if (student.inquisitorial === true) {
+    //   student.inquisitorial = false;
+    // } else if (student.inquisitorial === false) {
+    //   checkForInquisitorialRequirement(student);
+    // }
+
+    //// EKSPERIMENT:::::
+    // if (
+    //   (student.inquisitorial === false && student.bloodStatus === "pure") ||
+    //   (student.inquisitorial === false && student.house === "slytherin")
+    // ) {
+    //   student.inquisitorial = true;
+    // } else {
+    //   console.log("not pure blood - not eligible for IQUIS SQUAD");
+    //   alert("Cannot be added to iquisitorial squad");
+    //   student.inquisitorial = false;
+    // }
+    // console.log(student.inquisitorial);
+    // inquisitorial.push(student);
+    // inquisitorialList();
+    // checkCheckBoxes();
   }
+
   clone
     .querySelector("#expel")
     .addEventListener("click", () => expelStudent(student));
@@ -268,7 +327,12 @@ function displayStudent(student) {
     console.log("EXPELLING YOU", student);
     student.expel = true;
     console.log(student.expel);
+    //Expelling
+    students.splice(students.indexOf(student), 1);
+    console.log(students);
+
     expelledList();
+    setTimeout(buildList, 1500);
   }
 
   clone
@@ -276,6 +340,33 @@ function displayStudent(student) {
     .addEventListener("click", () => showPopUp(student));
   // append clone to list
   dataContainer.appendChild(clone);
+}
+
+function checkInquisitorialStatus(student) {
+  console.log("Running checkInquisitorialStatus", student);
+  if (student.inquisitorial === true) {
+    student.inquisitorial = false;
+  } else {
+    checkInquisitorialRequirements(student);
+  }
+  console.log(student);
+
+  // if (student.house === "slytherin" || student.bloodStatus === "pure") {
+  //   console.log("Join inquis");
+  //   student.inquisitorial = true;
+  // } else {
+  //   console.log("DESVÆRRE - kun for udvalgte");
+  // }
+  // checkCheckBoxes();
+}
+
+function checkInquisitorialRequirements(student) {
+  console.log("STUDENTER CHECK::::", student);
+  if (student.house === "slytherin" || student.bloodStatus === "pure") {
+    student.inquisitorial = true;
+  } else {
+    checkCheckBoxes();
+  }
 }
 
 function inquisitorialList() {
@@ -380,3 +471,67 @@ String.prototype.capitalize = function () {
 /// --- BUTTONS EVENTLISTENERS START ---  ///
 
 /// --- FILTERING ---  ///
+
+// expel:::
+// students.splice(student,1);
+
+function hackTheSystem() {
+  hasBeenHacked = true;
+
+  // Inject yourself
+
+  // - create an object - from student prototype
+
+  const myself = Object.create(Students);
+  //myself.firstName = //
+  //myself.prop1 = //
+  //myself.prop2 = //
+  //myself.hacker = true;
+
+  // Randomize blood-statuses
+  students.forEach((student) => {
+    if (student.bloodStatus === "pure") {
+      //Different ways to write the same thing:
+
+      const random = Math.floor(Math.random() * values.length);
+
+      const values = ["pure", "half", "muggle"];
+
+      student.bloodStatus = values[random];
+      // shortHand:::: student.bloodStatus = values[Math.floor(Math.random()* values.length)];
+
+      if (random === 0) {
+        student.bloodStatus = "half";
+      }
+      if (random === 1) {
+        student.bloodStatus = "pure";
+      }
+      if (random === 2) {
+        student.bloodStatus = "muggle";
+      }
+    }
+  });
+
+  function expel(student) {
+    if (student.hacker === true) {
+      // CODE  - Cannot expel
+    } else {
+      // CODE
+    }
+  }
+}
+
+function checkCheckBoxes() {
+  console.log("Running checkCheckBoxes");
+  let checkBoxes = document.querySelectorAll("#inquisitorial");
+  for (let i = 0; i < checkBoxes.length; i++) {
+    //console.log("::::::::------", students[i], checkBoxes[i]);
+    if (students[i].inquisitorial === true) {
+      //console.log(checkBoxes[i]);
+      checkBoxes[i].checked = true;
+    } else if (students[i].inquisitorial === false) {
+      //console.log("false", checkBoxes[i]);
+      checkBoxes[i].checked = false;
+    }
+  }
+}
