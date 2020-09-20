@@ -105,12 +105,22 @@
     <!-- HTML for pop up -->
     <section id="pop-up" class="hide">
       <article id="detail-view">
-        <button id="detail-close">X</button>
+        <button class="modal-close">X</button>
         <img src="" alt="" id="housecrest-pop-up" />
         <img src="" alt="" id="student-img-pop-up" />
         <h3 id="name-pop-up"></h3>
       </article>
     </section>
+
+    <div id="prefect-warning" class="modal hide">
+      <div class="dialog">
+        <button class="modal-close">X</button>
+        <h1>Warning</h1>
+        <p class="dialog-message"></p>
+        <button id="make-new-prefect">New</button>
+        <button id="keep-current-prefect">Keep</button>
+      </div>
+    </div>
 
     <script src="script.js"></script>
   </body>
