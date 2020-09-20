@@ -346,6 +346,8 @@ function checkInquisitorialStatus(student) {
   console.log("Running checkInquisitorialStatus", student);
   if (student.inquisitorial === true) {
     student.inquisitorial = false;
+    inquisitorial.splice(inquisitorial.indexOf(student), 1);
+    console.log("Removed from inquis", inquisitorial);
   } else {
     checkInquisitorialRequirements(student);
   }
@@ -364,6 +366,8 @@ function checkInquisitorialRequirements(student) {
   console.log("STUDENTER CHECK::::", student);
   if (student.house === "slytherin" || student.bloodStatus === "pure") {
     student.inquisitorial = true;
+    inquisitorial.push(student);
+    console.log("ARRAY OF INQUIS - global", inquisitorial);
   } else {
     checkCheckBoxes();
   }
@@ -525,12 +529,9 @@ function checkCheckBoxes() {
   console.log("Running checkCheckBoxes");
   let checkBoxes = document.querySelectorAll("#inquisitorial");
   for (let i = 0; i < checkBoxes.length; i++) {
-    //console.log("::::::::------", students[i], checkBoxes[i]);
     if (students[i].inquisitorial === true) {
-      //console.log(checkBoxes[i]);
       checkBoxes[i].checked = true;
-    } else if (students[i].inquisitorial === false) {
-      //console.log("false", checkBoxes[i]);
+    } else {
       checkBoxes[i].checked = false;
     }
   }
